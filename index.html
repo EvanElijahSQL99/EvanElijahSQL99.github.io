@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evan Elijah</title>
+<meta name="description" content="Evan Elijah: database engineering projects, including AI DBA advisors, change data capture, self-service database APIs, lakehouse archiving and blockchain reconciliation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: one reading column (max 1120px) for a hiring manager who skims top to bottom.
+   Hero pairs the thesis with a query result set of project results; projects are case studies with the same four parts. */
+:root {
+  --bg: #f5f7fa; --surface: #ffffff; --sunken: #ebeff4; --ink: #121821; --ink-2: #3f4a59; --muted: #627083; --line: #d9e0e8;
+  --accent: #1d5bc4; --accent-soft: #e3ecfb; --ok: #16794f; --ok-soft: #dff2e8; --code: #0f3d8a;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --shadow: 0 1px 2px rgba(18,24,33,.05), 0 12px 32px -22px rgba(18,24,33,.35);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1218; --surface: #151b24; --sunken: #1c2430; --ink: #e9eef4; --ink-2: #b7c2d0; --muted: #8b98aa; --line: #263142;
+    --accent: #84aef5; --accent-soft: #1a2a46; --ok: #4fcf94; --ok-soft: #143326; --code: #a9c6fa;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -22px rgba(0,0,0,.9); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1218; --surface: #151b24; --sunken: #1c2430; --ink: #e9eef4; --ink-2: #b7c2d0; --muted: #8b98aa; --line: #263142;
+  --accent: #84aef5; --accent-soft: #1a2a46; --ok: #4fcf94; --ok-soft: #143326; --code: #a9c6fa;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -22px rgba(0,0,0,.9); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 var(--body); }
+a { color: var(--accent); text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 24px; }
+h1, h2, h3 { font-family: var(--display); letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+.mono { font-family: var(--mono); }
+.eyebrow { font: 500 12.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 20px; padding-block: 12px; flex-wrap: wrap; }
+.brand { font: 700 18px/1 var(--display); color: var(--ink); text-decoration: none; letter-spacing: -.01em; }
+.top nav { display: flex; gap: 18px; margin-left: auto; flex-wrap: wrap; }
+.top nav a { color: var(--ink-2); text-decoration: none; font-size: 14.5px; }
+.top nav a:hover { color: var(--accent); }
+
+/* buttons */
+.btn { display: inline-flex; align-items: center; gap: 8px; border-radius: 9px; padding: 10px 16px; font-weight: 600; font-size: 15px;
+  text-decoration: none; border: 1px solid transparent; cursor: pointer; font-family: var(--body); }
+.btn.primary { background: var(--ink); color: var(--bg); }
+.btn.ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn:hover { filter: brightness(1.08); }
+
+/* hero */
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 48px; align-items: center; padding-block: 64px 40px; }
+.hero h1 { font-size: clamp(34px, 5vw, 54px); line-height: 1.05; margin-top: 14px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero p.lede { font-size: 18.5px; color: var(--ink-2); max-width: 60ch; margin: 20px 0 26px; }
+.hero .ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+.hero .loc { margin-top: 18px; font-size: 14px; color: var(--muted); }
+
+/* result set */
+.rs { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; min-width: 0; }
+.rs .q { font: 13px/1.6 var(--mono); padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--sunken); color: var(--ink-2); overflow-x: auto; white-space: nowrap; }
+.rs .q b { color: var(--code); font-weight: 500; }
+.rs table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.rs th { text-align: left; font: 500 11.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 10px 18px; border-bottom: 1px solid var(--line); }
+.rs td { padding: 11px 18px; border-bottom: 1px solid var(--line); font-size: 15px; vertical-align: top; }
+.rs td b { font-weight: 600; }
+.rs td.v { font: 600 17px/1.3 var(--display); white-space: nowrap; text-align: right; }
+.rs tr:last-child td { border-bottom: 0; }
+.rs .foot { font: 12.5px/1 var(--mono); color: var(--muted); padding: 10px 18px; border-top: 1px solid var(--line); }
+
+/* sections */
+section.block { padding-block: 56px; border-top: 1px solid var(--line); }
+section.block > .wrap > h2 { font-size: clamp(26px, 3.4vw, 36px); margin-top: 10px; }
+section.block > .wrap > p.intro { color: var(--ink-2); max-width: 68ch; margin: 12px 0 30px; font-size: 17px; }
+
+/* video */
+.video { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); }
+.video video { display: block; width: 100%; height: auto; background: #000; aspect-ratio: 16 / 9; max-width: 100%; }
+.video .cap { padding: 12px 18px; font-size: 14px; color: var(--muted); }
+
+/* projects */
+.projects { display: grid; gap: 22px; }
+.proj { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 26px 28px; box-shadow: var(--shadow);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 10px 36px; }
+.proj > div { min-width: 0; }
+.proj .head { grid-column: 1 / -1; display: flex; gap: 10px 14px; align-items: baseline; flex-wrap: wrap; }
+.proj h3 { font-size: 25px; }
+.proj .what { color: var(--muted); font-size: 15px; }
+.proj .tag { margin-left: auto; font: 500 12px/1 var(--mono); background: var(--sunken); color: var(--ink-2); border-radius: 999px; padding: 6px 10px; white-space: nowrap; }
+.flow { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0 8px; font-size: 13.5px; }
+.flow span { background: var(--accent-soft); color: var(--accent); border-radius: 7px; padding: 4px 10px; font-weight: 500; }
+.flow i { font-style: normal; color: var(--muted); }
+.proj h4 { font: 500 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; }
+.proj p { margin: 0; color: var(--ink-2); }
+.proj ul { margin: 0; padding-left: 18px; color: var(--ink-2); }
+.proj li { margin: 4px 0; }
+.proj li b { color: var(--ink); font-weight: 600; }
+.proof { background: var(--sunken); border-radius: 11px; padding: 16px 18px; align-self: start; }
+.proof h4 { margin-top: 0; }
+.proof dl { margin: 0; display: grid; gap: 12px; }
+.proof dt { font: 650 22px/1.1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums; }
+.proof dd { margin: 2px 0 0; font-size: 13.5px; color: var(--ink-2); }
+.clip { grid-column: 1 / -1; margin: 6px 0 10px; border-radius: 11px; overflow: hidden; border: 1px solid var(--line); background: #000; }
+.clip video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; }
+.stack { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.stack span { font: 12.5px/1 var(--mono); color: var(--ink-2); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+
+/* practices */
+.practices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.practice { border-top: 2px solid var(--ink); padding-top: 14px; }
+.practice h3 { font-size: 19px; margin-bottom: 6px; }
+.practice p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+
+/* experience */
+.roles { display: grid; gap: 0; }
+.role { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 8px 32px; padding-block: 22px; border-bottom: 1px solid var(--line); }
+.role:last-child { border-bottom: 0; }
+.role .when { font: 13px/1.5 var(--mono); color: var(--muted); padding-top: 4px; }
+.role h3 { font-size: 20px; }
+.role .org { color: var(--muted); font-size: 15px; margin: 2px 0 8px; }
+.role ul { margin: 0; padding-left: 18px; color: var(--ink-2); }
+.role li { margin: 4px 0; }
+.role li b { color: var(--ink); }
+.earlier { color: var(--ink-2); margin-top: 18px; font-size: 15.5px; }
+
+/* skills + education */
+.cols3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+.cols3 h3 { font-size: 17px; margin-bottom: 10px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips span { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 5px 10px; font-size: 14px; }
+.edu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; margin-top: 34px; }
+.edu div { font-size: 15px; color: var(--ink-2); }
+.edu b { display: block; color: var(--ink); font-weight: 600; }
+
+/* contact */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+.contact .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow); }
+.contact .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding-block: 10px; border-bottom: 1px solid var(--line); }
+.contact .row:last-child { border-bottom: 0; }
+.contact .row .k { width: 84px; font: 500 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.contact .row .val { font-size: 15.5px; user-select: all; overflow-wrap: anywhere; min-width: 0; }
+.copy { margin-left: auto; font: 500 13px/1 var(--body); background: var(--sunken); border: 1px solid var(--line); color: var(--ink); border-radius: 7px; padding: 6px 10px; cursor: pointer; }
+footer { padding-block: 28px 48px; color: var(--muted); font-size: 13.5px; border-top: 1px solid var(--line); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: 32px; padding-block: 40px 28px; }
+  .proj { grid-template-columns: 1fr; padding: 22px 20px; }
+  .proj .tag { margin-left: 0; }
+  .cols3 { grid-template-columns: 1fr; }
+  .contact { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .wrap { padding-inline: 16px; }
+  .top nav { margin-left: 0; gap: 14px; }
+  .practices, .edu { grid-template-columns: 1fr; }
+  .role { grid-template-columns: 1fr; gap: 2px; }
+  .rs td, .rs th { padding-inline: 14px; }
+  .rs td.v { font-size: 15px; }
+  section.block { padding-block: 44px; }
+}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top">Evan Elijah</a>
+    <nav aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#how">How I build</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <div class="eyebrow">Database engineering projects · 2026</div>
+      <h1>Hard database problems, <em>solved end to end and proven with tests.</em></h1>
+      <p class="lede">Seven working systems I designed and built on my own: AI assistants that answer DBA questions with sources,
+        real-time change data capture, self-service database APIs, safe archiving of legacy data into a lakehouse, and reconciliation
+        of a tokenized asset against its books. Each one names a problem, shows how I solved it, and proves it with measured results.</p>
+      <div class="ctas">
+        <a class="btn primary" href="#walkthrough">Watch the 3-minute tour</a>
+        <a class="btn ghost" href="#work">See the projects</a>
+        <a class="btn ghost" href="#contact">Request a live demo</a>
+      </div>
+    </div>
+    <div class="rs" aria-label="Project results">
+      <div class="q"><b>SELECT</b> project, result <b>FROM</b> projects <b>ORDER BY</b> built <b>DESC</b>;</div>
+      <table>
+        <thead><tr><th>project · result</th><th style="text-align:right">value</th></tr></thead>
+        <tbody>
+          <tr><td><b>Janus</b> · failure types caught between a blockchain and its books</td><td class="v">9 of 9</td></tr>
+          <tr><td><b>Atlas</b> · rows archived to Iceberg and verified before deletion</td><td class="v">1.17M</td></tr>
+          <tr><td><b>Hermes</b> · typical time from database commit to processed</td><td class="v">~140 ms</td></tr>
+          <tr><td><b>Neura</b> · documentation excerpts grounding its answers</td><td class="v">10,733</td></tr>
+          <tr><td><b>DBaaS</b> · checks in the end-to-end smoke suite</td><td class="v">31</td></tr>
+        </tbody>
+      </table>
+      <div class="foot">(5 rows affected)</div>
+    </div>
+  </div>
+
+  <section class="block" id="walkthrough">
+    <div class="wrap">
+      <div class="eyebrow">Three-minute walkthrough</div>
+      <h2>The projects, running</h2>
+      <p class="intro">A recorded tour of every project: an AI advisor answering with sources, change data capture catching a blocking
+        chain, self-service databases, a verified archive into Iceberg, and a $1M unbacked mint caught and fixed.</p>
+      <div class="video">
+        <video controls preload="none" playsinline poster="media/portfolio-reel.jpg" src="media/portfolio-reel.mp4"></video>
+        <div class="cap">Recorded from the live deployments on AWS. Synthetic data throughout.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="work">
+    <div class="wrap">
+      <div class="eyebrow">Projects</div>
+      <h2>Seven working systems, built and tested end to end</h2>
+      <p class="intro">Independent projects that explore common industry patterns, each built from scratch on my own AWS account and
+        equipment, from public documentation and with synthetic data. Every project follows the same outline: the problem, what I built,
+        how it solves the problem, and the proof.</p>
+
+      <div class="projects">
+        <article class="proj">
+          <div class="head"><h3>Argus, Talos and Neura</h3><span class="what">AI DBA advisors for SQL Server, Oracle and PostgreSQL</span><span class="tag">Generative AI · RAG</span></div>
+          <div class="flow" aria-label="How it works"><span>DBA question</span><i>→</i><span>Deterministic checks</span><i>→</i><span>Retrieve vendor docs</span><i>→</i><span>Claude on Bedrock</span><i>→</i><span>Answer with sources</span></div>
+          <div class="clip"><video controls preload="none" playsinline poster="media/advisors.jpg" src="media/advisors.mp4" aria-label="Argus, Talos and Neura demo"></video></div>
+          <div>
+            <h4>The problem</h4>
+            <p>DBA knowledge lives in a few senior heads, and generic AI answers are too confident to use on production systems.</p>
+            <h4>What I built</h4>
+            <ul>
+              <li>Three advisors on one shared design, so every engine gets the same kind of help.</li>
+              <li><b>Rules run before any AI:</b> version end-of-support checks, plan analysis and team standards applied to every request.</li>
+              <li><b>Grounded answers:</b> retrieval over vendor documentation, with the sources shown so a DBA can verify them.</li>
+              <li>Amazon Bedrock (Claude) as the model, with automatic failover to the Anthropic API.</li>
+            </ul>
+            <h4>How it solves the problem</h4>
+            <p>Known issues, such as an unsupported version or a red flag in a query plan, are caught by fixed rules before any AI is involved.
+              Every AI answer cites the vendor page it came from, so a DBA can check it before acting. Junior DBAs get senior-level guidance
+              on demand, and senior DBAs stop being the bottleneck.</p>
+          </div>
+          <div class="proof">
+            <h4>Proof</h4>
+            <dl>
+              <div><dt>10,733</dt><dd>excerpts from the PostgreSQL manual and AWS RDS and Aurora guides indexed for Neura</dd></div>
+              <div><dt>262</dt><dd>PostgreSQL error codes recognized</dd></div>
+              <div><dt>3 engines</dt><dd>covered by one architecture</dd></div>
+            </dl>
+          </div>
+          <div class="stack"><span>React</span><span>AWS Lambda</span><span>Amazon Bedrock</span><span>Retrieval (RAG)</span><span>CloudFront</span><span>S3</span></div>
+        </article>
+
+        <article class="proj">
+          <div class="head"><h3>Janus</h3><span class="what">Stablecoin reconciliation: blockchain against the books</span><span class="tag">Tokenization · Controls</span></div>
+          <div class="flow" aria-label="How it works"><span>Book the entry</span><i>→</i><span>Submit transaction</span><i>→</i><span>Index blocks</span><i>→</i><span>Wait for finality</span><i>→</i><span>SQL match</span><i>→</i><span>Two-person fix</span></div>
+          <div class="clip"><video controls preload="none" playsinline poster="media/janus.jpg" src="media/janus.mp4" aria-label="Janus demo"></video></div>
+          <div>
+            <h4>The problem</h4>
+            <p>Tokenized assets live on a blockchain, but the official record lives in a database. When the two disagree, someone has to find out first.</p>
+            <h4>What I built</h4>
+            <ul>
+              <li>A demo stablecoin (ERC-20) on a real EVM chain, with the holder register, ledger and cash reserve in PostgreSQL.</li>
+              <li><b>An indexer that respects finality:</b> nothing settles until 5 blocks deep, and chain reorgs are detected and rolled back.</li>
+              <li><b>One SQL statement</b> pairs every transfer with its booking and classifies each disagreement.</li>
+              <li>A break queue where an analyst proposes each fix and a controller approves it.</li>
+            </ul>
+            <h4>How it solves the problem</h4>
+            <p>Disagreements surface within seconds of a transaction becoming final, not at month-end. Each one arrives with a suggested fix,
+              and nothing changes until a second person approves, so the books stay correct and auditable. An unbacked mint shows up
+              immediately as reserve coverage below 100%.</p>
+          </div>
+          <div class="proof">
+            <h4>Proof</h4>
+            <dl>
+              <div><dt>9 of 9</dt><dd>failure types caught, from unbacked mints to double postings and reorgs</dd></div>
+              <div><dt>4 ways</dt><dd>supply is proven: indexed events, the contract, the books and the reserve</dd></div>
+              <div><dt>14 checks</dt><dd>in the automated end-to-end browser test, all passing on the live deployment</dd></div>
+            </dl>
+          </div>
+          <div class="stack"><span>Python</span><span>FastAPI</span><span>PostgreSQL</span><span>Solidity</span><span>Anvil (EVM)</span><span>web3.py</span><span>Playwright</span></div>
+        </article>
+
+        <article class="proj">
+          <div class="head"><h3>Atlas</h3><span class="what">Retiring cold SQL Server data into Apache Iceberg</span><span class="tag">Lakehouse · Retention</span></div>
+          <div class="flow" aria-label="How it works"><span>Retention policy</span><i>→</i><span>Copy to Iceberg</span><i>→</i><span>Verify every row</span><i>→</i><span>Approve</span><i>→</i><span>Purge source</span><i>→</i><span>Query in Athena</span></div>
+          <div class="clip"><video controls preload="none" playsinline poster="media/atlas.jpg" src="media/atlas.mp4" aria-label="Atlas demo"></video></div>
+          <div>
+            <h4>The problem</h4>
+            <p>Legacy databases carry years of data nobody reads, paying for storage, backups and licenses. Deleting it safely is the hard part.</p>
+            <h4>What I built</h4>
+            <ul>
+              <li>Retention written as code, with customers under legal hold never touched.</li>
+              <li><b>Proof before deletion:</b> each yearly slice is compared by row count, money total and a fingerprint of every row.</li>
+              <li>Purge only after a second person approves, in batches, followed by an index rebuild that returns the space.</li>
+              <li>The archive stays queryable in Athena, with time travel and single-customer restore.</li>
+            </ul>
+            <h4>How it solves the problem</h4>
+            <p>Cold data leaves the expensive database only after the archive proves it holds an exact copy, which makes the deletion safe
+              to approve. The source database shrinks, so backups and maintenance get faster, and the history stays available for audits
+              and legal requests at a fraction of the storage cost.</p>
+          </div>
+          <div class="proof">
+            <h4>Proof</h4>
+            <dl>
+              <div><dt>1,167,826</dt><dd>rows archived and verified across 12 slices</dd></div>
+              <div><dt>47%</dt><dd>of the source database freed (80 MB)</dd></div>
+              <div><dt>4.3×</dt><dd>smaller as compressed Parquet, queried in under a second</dd></div>
+            </dl>
+          </div>
+          <div class="stack"><span>SQL Server 2022</span><span>Apache Iceberg</span><span>PyIceberg</span><span>AWS Glue</span><span>Amazon Athena</span><span>S3</span></div>
+        </article>
+
+        <article class="proj">
+          <div class="head"><h3>Hermes</h3><span class="what">Change data capture with automated detection</span><span class="tag">Streaming · Observability</span></div>
+          <div class="flow" aria-label="How it works"><span>PostgreSQL WAL</span><i>→</i><span>Debezium</span><i>→</i><span>Kafka</span><i>→</i><span>Stream processor</span><i>→</i><span>Metrics and alerts</span></div>
+          <div class="clip"><video controls preload="none" playsinline poster="media/hermes.jpg" src="media/hermes.mp4" aria-label="Hermes demo"></video></div>
+          <div>
+            <h4>The problem</h4>
+            <p>DBAs spend nights watching for blocking, long transactions and replication lag that software could detect.</p>
+            <h4>What I built</h4>
+            <ul>
+              <li>Log-based change capture of every insert, update and delete, with no polling and no application changes.</li>
+              <li><b>Detection rules</b> for blocking chains, long transactions, replication slot lag, transaction ID age and throughput drops.</li>
+              <li>Each problem opens one alert and resolves it on its own, so on-call engineers aren't paged over and over for the same issue.</li>
+              <li>Visitors can break it on purpose and watch it detect and recover.</li>
+            </ul>
+            <h4>How it solves the problem</h4>
+            <p>Problems are detected and alerted within seconds, without anyone watching a dashboard. Because each alert opens once and
+              closes itself when the condition clears, on-call staff respond to real problems instead of noise. The same change stream
+              can also feed analytics and a data lakehouse without adding load to the database.</p>
+          </div>
+          <div class="proof">
+            <h4>Proof</h4>
+            <dl>
+              <div><dt>~140 ms</dt><dd>typical time from commit to processed, measured live</dd></div>
+              <div><dt>5 rules</dt><dd>that alert once and resolve once</dd></div>
+              <div><dt>0 changes</dt><dd>to the source application</dd></div>
+            </dl>
+          </div>
+          <div class="stack"><span>PostgreSQL</span><span>Debezium</span><span>Apache Kafka</span><span>Docker</span><span>AWS EC2</span></div>
+        </article>
+
+        <article class="proj">
+          <div class="head"><h3>DBaaS control plane</h3><span class="what">Self-service database requests with standards built in</span><span class="tag">Platform · APIs</span></div>
+          <div class="flow" aria-label="How it works"><span>Request</span><i>→</i><span>Standards check</span><i>→</i><span>Approval</span><i>→</i><span>Provision</span><i>→</i><span>Operate and audit</span></div>
+          <div class="clip"><video controls preload="none" playsinline poster="media/dbaas.jpg" src="media/dbaas.mp4" aria-label="DBaaS control plane demo"></video></div>
+          <div>
+            <h4>The problem</h4>
+            <p>Ticket queues for routine database work slow teams down, and manual work drifts from standards.</p>
+            <h4>What I built</h4>
+            <ul>
+              <li>Two REST APIs for PostgreSQL: one provisions, one operates.</li>
+              <li><b>Standards as code</b> validate every request before it reaches a server.</li>
+              <li>Approval workflows, idempotent requests, time-boxed access grants, backup and restore, and a full audit trail.</li>
+              <li>Blocking-chain analysis with a dry run before any session is terminated.</li>
+            </ul>
+            <h4>How it solves the problem</h4>
+            <p>Teams get a database through an API in minutes instead of waiting on a ticket queue, and every request is checked against
+              standards before it runs. Approvals, time-limited access and the audit trail happen automatically, so moving faster doesn't
+              mean giving up control.</p>
+          </div>
+          <div class="proof">
+            <h4>Proof</h4>
+            <dl>
+              <div><dt>31 checks</dt><dd>in the end-to-end smoke suite</dd></div>
+              <div><dt>Real databases</dt><dd>in integration tests, through Testcontainers</dd></div>
+              <div><dt>No SSH</dt><dd>managed only through AWS Systems Manager</dd></div>
+            </dl>
+          </div>
+          <div class="stack"><span>Java 21</span><span>Spring Boot 3</span><span>PostgreSQL</span><span>Testcontainers</span><span>Docker Compose</span><span>Caddy</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="how">
+    <div class="wrap">
+      <div class="eyebrow">How I build</div>
+      <h2>Built to production standards</h2>
+      <p class="intro">A project is only useful if it would survive production. These are the practices built into every project here.</p>
+      <div class="practices">
+        <div class="practice"><h3>Tested end to end</h3><p>Every project ships with automated browser tests that exercise the real user flow, plus integration tests against real databases. The tests run on the deployed environment, not just a laptop.</p></div>
+        <div class="practice"><h3>Controls designed in</h3><p>Separation of duties, verification before deletion, audit trails and legal holds are part of the design from the first commit, the way SOX and audit expect them.</p></div>
+        <div class="practice"><h3>Secure by default</h3><p>Nothing is open to the internet except through the CDN. Servers have no SSH, credentials never live in code, and every demo sits behind authentication.</p></div>
+        <div class="practice"><h3>Cost aware</h3><p>Static front ends cost cents. Compute runs only while it is being used, and one command starts or stops a whole environment.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="stack">
+    <div class="wrap">
+      <div class="eyebrow">Technologies</div>
+      <h2>What the projects are built with</h2>
+      <div class="cols3" style="margin-top:26px">
+        <div><h3>Databases and data</h3><div class="chips"><span>SQL Server</span><span>Oracle</span><span>PostgreSQL</span><span>Apache Iceberg</span><span>Apache Kafka</span><span>Debezium</span><span>Amazon Athena</span><span>AWS Glue</span></div></div>
+        <div><h3>AI and applications</h3><div class="chips"><span>Amazon Bedrock (Claude)</span><span>Retrieval (RAG)</span><span>Java 21 and Spring Boot</span><span>Python and FastAPI</span><span>React</span><span>Solidity</span></div></div>
+        <div><h3>Cloud and delivery</h3><div class="chips"><span>AWS Lambda</span><span>EC2 and Systems Manager</span><span>S3 and CloudFront</span><span>Docker Compose</span><span>Playwright</span><span>Testcontainers</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contact">
+    <div class="wrap contact">
+      <div>
+        <div class="eyebrow">Contact</div>
+        <h2 style="font-size:clamp(26px,3.4vw,36px);margin-top:10px">See any project running</h2>
+        <p style="color:var(--ink-2);max-width:52ch;margin:12px 0 0">The live environments run on request. Get in touch and I'll start one for a walkthrough, or talk through how a project would apply to your database platform.</p>
+      </div>
+      <div class="card">
+        <div class="row"><span class="k">Email</span><span class="val" id="email">eje37575@outlook.com</span><button class="copy" type="button" data-copy="email">Copy</button></div>
+        <div class="row"><span class="k">LinkedIn</span><a class="val" href="https://www.linkedin.com/in/evan-e-04068397" target="_blank" rel="noopener">linkedin.com/in/evan-e-04068397</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Evan Elijah · All projects are independent personal work, built on my own time and equipment from public documentation, with synthetic data. They do not use or represent any employer's code, data or confidential information.</div>
+</footer>
+
+<script>
+
+document.querySelectorAll("[data-copy]").forEach((b) => b.addEventListener("click", () => {
+  const el = document.getElementById(b.dataset.copy);
+  const done = () => { b.textContent = "Copied"; setTimeout(() => { b.textContent = "Copy"; }, 1600); };
+  const select = () => { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = "Selected"; };
+  try { navigator.clipboard.writeText(el.textContent).then(done, select); } catch (e) { select(); }
+}));
+</script>
+
+</body>
+</html>
